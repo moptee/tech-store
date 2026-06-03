@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TECH STORE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f4f1;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.09);
+      --border-hover: rgba(0,0,0,0.22);
+      --text: #111110;
+      --muted: #888780;
+      --radius: 12px;
+    }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.1em; }
+    .header-sub { font-size: 13px; color: var(--muted); }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+
+    .hero { margin-bottom: 2.5rem; }
+    .hero h1 { font-size: 26px; font-weight: 500; letter-spacing: -0.4px; margin-bottom: 5px; }
+    .hero p { font-size: 14px; color: var(--muted); }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      padding: 8px 16px;
+      border: none;
+      background: none;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { color: var(--text); font-weight: 500; border-bottom-color: var(--text); }
+
+    .product-count { font-size: 13px; color: var(--muted); margin-bottom: 1.2rem; }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .product-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    .product-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+    .card-img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: contain;
+      background: #fafaf8;
+      padding: 1rem;
+    }
+    .card-img-placeholder {
+      width: 100%;
+      aspect-ratio: 1;
+      background: #fafaf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    .card-body { padding: 1rem; }
+    .card-name { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 8px; }
+
+    .stars { display: flex; align-items: center; gap: 4px; }
+    .star { font-size: 13px; color: #f5a623; }
+    .star.empty { color: #ddd; }
+    .rating-num { font-size: 12px; color: var(--muted); }
+
+    .loading { text-align: center; padding: 4rem 0; color: var(--muted); font-size: 14px; }
+    .error { text-align: center; padding: 4rem 0; color: #e24b4a; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">TECH STORE</div>
+  <div class="header-sub">ガジェット・レビューサイト</div>
+</header>
+
+<main>
+  <div class="hero">
+    <h1>ガジェットレビュー</h1>
+    <p>厳選したガジェットを正直にレビュー。あなたの次の一台を見つけよう。</p>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="product-count" id="count"></div>
+  <div class="product-grid" id="grid"><div class="loading">読み込み中...</div></div>
+</main>
+
+<script>
+  const SERVICE_ID = '0sw6lrgtyi';
+  const API_KEY = '%%MICROCMS_API_KEY%%';
+  const CATEGORIES = ['すべて', 'マウス', 'キーボード', 'オーディオ', 'モニター', 'その他'];
+
+  let products = [];
+  let current = 'すべて';
+
+  function renderStars(rating) {
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+      if (rating >= i) html += '<span class="star">★</span>';
+      else if (rating >= i - 0.5) html += '<span class="star">★</span>';
+      else html += '<span class="star empty">★</span>';
+    }
+    return html;
+  }
+
+  function renderTabs() {
+    document.getElementById('tabs').innerHTML = CATEGORIES.map(cat => `
+      <button class="tab ${cat === current ? 'active' : ''}" onclick="setCategory('${cat}')">${cat}</button>
+    `).join('');
+  }
+
+  function renderGrid() {
+    const filtered = current === 'すべて' ? products : products.filter(p => p.category === current);
+    document.getElementById('count').textContent = filtered.length + '件の商品';
+    document.getElementById('grid').innerHTML = filtered.length === 0
+      ? '<div class="loading">商品が見つかりませんでした</div>'
+      : filtered.map(p => `
+        <a class="product-card" href="product.html?id=${p.id}">
+          ${p.thumbnail
+            ? `<img class="card-img" src="${p.thumbnail}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'">`
+            : `<div class="card-img-placeholder">📦</div>`}
+          <div class="card-body">
+            <div class="card-name">${p.name}</div>
+            <div class="stars">
+              ${renderStars(p.rating)}
+              <span class="rating-num">${Number(p.rating).toFixed(1)}</span>
+            </div>
+          </div>
+        </a>
+      `).join('');
+  }
+
+  function setCategory(cat) {
+    current = cat;
+    renderTabs();
+    renderGrid();
+  }
+
+  async function loadProducts() {
+    try {
+      const res = await fetch(`https://${SERVICE_ID}.microcms.io/api/v1/products?limit=100`, {
+        headers: { 'X-MICROCMS-API-KEY': API_KEY }
+      });
+      if (!res.ok) throw new Error('APIエラー');
+      const data = await res.json();
+      products = data.contents;
+      renderTabs();
+      renderGrid();
+    } catch (e) {
+      document.getElementById('grid').innerHTML = '<div class="error">商品の読み込みに失敗しました</div>';
+    }
+  }
+
+  loadProducts();
+</script>
+</body>
+</html>

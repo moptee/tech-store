@@ -152,7 +152,10 @@
   }
 
   function renderGrid() {
-    const filtered = current === 'すべて' ? products : products.filter(p => p.category === current);
+    const filtered = current === 'すべて' ? products : products.filter(p => {
+  const cat = Array.isArray(p.category) ? p.category[0] : p.category;
+  return cat === current;
+});
     document.getElementById('count').textContent = filtered.length + '件の商品';
     document.getElementById('grid').innerHTML = filtered.length === 0
       ? '<div class="loading">商品が見つかりませんでした</div>'

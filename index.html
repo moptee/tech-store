@@ -111,19 +111,22 @@
 </head>
 <body>
 
-<header style="justify-content:center;">
-  <img src="logo.png" alt="モプガジェ" style="height:48px;">
-</header>
 
 <main>
-  <div class="hero">
-    <h1>ガジェットレビュー</h1>
-    <p>厳選したガジェットを正直にレビュー。</p>
+  <div style="display:grid;grid-template-columns:200px 1fr;gap:32px;max-width:1100px;margin:0 auto;padding:2rem 1.5rem">
+    <div style="padding-top:8px">
+      <a href="index.html"><img src="logo.png" alt="モプガジェ" style="width:200px;object-fit:contain"></a>
+    </div>
+    <div>
+      <div class="hero">
+        <h1>ガジェットレビュー</h1>
+        <p>厳選したガジェットを正直にレビュー。あなたの次の一台を見つけよう。</p>
+      </div>
+      <div class="tabs" id="tabs"></div>
+      <div class="product-count" id="count"></div>
+      <div class="product-grid" id="grid"><div class="loading">読み込み中...</div></div>
+    </div>
   </div>
-
-  <div class="tabs" id="tabs"></div>
-  <div class="product-count" id="count"></div>
-  <div class="product-grid" id="grid"><div class="loading">読み込み中...</div></div>
 </main>
 
 <script>

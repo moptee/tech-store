@@ -17,17 +17,58 @@
       --radius: 12px;
     }
     body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-    main { max-width:900px; margin:0 auto; padding:2rem 1.5rem; }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .logo { font-family: 'DM Mono', monospace; font-size: 14px; letter-spacing: 0.1em; text-decoration: none; color: var(--text); }
+    .back { font-size: 13px; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .back:hover { color: var(--text); }
+
+    main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
     .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 1.5rem; }
     .breadcrumb a { color: var(--muted); text-decoration: none; }
     .breadcrumb a:hover { color: var(--text); }
     .breadcrumb span { margin: 0 6px; }
-    .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
     @media (max-width: 600px) { .layout { grid-template-columns: 1fr; } }
-    .img-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); aspect-ratio: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; overflow: hidden; }
+
+    .img-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      overflow: hidden;
+    }
     .img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+
     .info { display: flex; flex-direction: column; gap: 14px; }
-    .category-tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); width: fit-content; }
+    .category-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: fit-content;
+    }
     .product-name { font-size: 22px; font-weight: 500; letter-spacing: -0.3px; line-height: 1.3; }
     .stars { display: flex; align-items: center; gap: 5px; }
     .star { font-size: 18px; color: #f5a623; }
@@ -35,11 +76,42 @@
     .rating-num { font-size: 14px; color: var(--muted); }
     .price { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; }
     .divider { height: 1px; background: var(--border); }
-    .specs { font-size: 13px; color: var(--muted); line-height: 1.9; background: var(--bg); padding: 12px 14px; border-radius: 8px; }
-    .amazon-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--text); color: var(--surface); border: none; border-radius: var(--radius); padding: 13px 20px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; text-decoration: none; transition: opacity 0.15s; }
+    .specs {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.9;
+      background: var(--bg);
+      padding: 12px 14px;
+      border-radius: 8px;
+    }
+    .amazon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--text);
+      color: var(--surface);
+      border: none;
+      border-radius: var(--radius);
+      padding: 13px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
     .amazon-btn:hover { opacity: 0.82; }
-    .review-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; margin-bottom: 1rem; }
+
+    .review-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+    }
     .section-title { font-size: 15px; font-weight: 500; margin-bottom: 1.25rem; }
+
     .review-body { font-size: 14px; line-height: 1.9; color: var(--text); }
     .review-body img { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
     .review-body h1, .review-body h2, .review-body h3 { font-weight: 500; margin: 1.5rem 0 0.5rem; }
@@ -48,17 +120,21 @@
     .review-body li { margin-bottom: 4px; }
     .review-body a { color: var(--text); }
     .review-body strong { font-weight: 500; }
+
     .loading { text-align: center; padding: 4rem 0; color: var(--muted); font-size: 14px; }
     .error { text-align: center; padding: 4rem 0; color: #e24b4a; font-size: 14px; }
   </style>
 </head>
 <body>
-<main>
-  <div style="margin-bottom:20px">
-    <a href="index.html"><img src="logo.png" alt="モプガジェ" style="width:200px;object-fit:contain"></a>
-  </div>
-  <div id="main-content"><div class="loading">読み込み中...</div></div>
+
+<header style="justify-content:center;">
+  <a href="index.html"><img src="logo.png" alt="モプガジェ" style="height:48px;"></a>
+</header>
+
+<main id="main">
+  <div class="loading">読み込み中...</div>
 </main>
+
 <script>
   const SERVICE_ID = '0sw6lrgtyi';
   const API_KEY = 'dQimFx9nYsdJeoapfVytv3if22d1htnkLYbk';
@@ -85,26 +161,26 @@
       if (!res.ok) throw new Error();
       const p = await res.json();
 
-      document.title = `${p.name} | モプガジェ`;
+      document.title = `${p.name} | TECH STORE`;
 
-      const cat = Array.isArray(p.category) ? p.category[0] : p.category;
-
-      document.getElementById('main-content').innerHTML = `
+      document.getElementById('main').innerHTML = `
         <div class="breadcrumb">
           <a href="index.html">一覧</a>
           <span>›</span>
-          ${cat}
+          ${p.category}
           <span>›</span>
           ${p.name}
         </div>
+
         <div class="layout">
           <div class="img-wrap">
             ${p.thumbnail
               ? `<img src="${p.thumbnail}" alt="${p.name}">`
               : `<div style="font-size:60px">📦</div>`}
           </div>
+
           <div class="info">
-            <div class="category-tag">${cat}</div>
+            <div class="category-tag">${p.category}</div>
             <div class="product-name">${p.name}</div>
             <div class="stars">
               ${renderStars(p.rating)}
@@ -116,6 +192,7 @@
             ${p.url ? `<a class="amazon-btn" href="${p.url}" target="_blank" rel="noopener">↗ Amazonで見る</a>` : ''}
           </div>
         </div>
+
         ${p.review ? `
           <div class="review-section">
             <div class="section-title">レビュー</div>
@@ -124,7 +201,7 @@
         ` : ''}
       `;
     } catch (e) {
-      document.getElementById('main-content').innerHTML = '<div class="error">商品の読み込みに失敗しました</div>';
+      document.getElementById('main').innerHTML = '<div class="error">商品の読み込みに失敗しました</div>';
     }
   }
 

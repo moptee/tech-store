@@ -160,6 +160,7 @@
       });
       if (!res.ok) throw new Error();
       const p = await res.json();
+      const cat = Array.isArray(p.category) ? p.category[0] : p.category;
 
       document.title = `${p.name} | TECH STORE`;
 
@@ -167,7 +168,7 @@
         <div class="breadcrumb">
           <a href="index.html">一覧</a>
           <span>›</span>
-          ${p.category}
+          ${cat}
           <span>›</span>
           ${p.name}
         </div>
@@ -180,7 +181,7 @@
           </div>
 
           <div class="info">
-            <div class="category-tag">${p.category}</div>
+            <div class="category-tag">${cat}</div>
             <div class="product-name">${p.name}</div>
             <div class="stars">
               ${renderStars(p.rating)}

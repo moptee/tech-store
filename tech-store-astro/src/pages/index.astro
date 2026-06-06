@@ -1,0 +1,193 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAllProducts } from '../lib/microcms.js';
+
+const products = await getAllProducts();
+const CATEGORIES = ['すべて', 'マウス', 'キーボード', 'オーディオ', 'モニター', 'その他'];
+
+function renderStars(rating) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    html += rating >= i
+      ? '<span class="star">★</span>'
+      : '<span class="star empty">★</span>';
+  }
+  return html;
+}
+
+function getCategory(p) {
+  return Array.isArray(p.category) ? p.category[0] : p.category;
+}
+---
+
+<BaseLayout>
+  <main>
+    <div class="page-grid">
+      <!-- サイドバー -->
+      <div class="sidebar">
+        <a href="/"><img src="/logo.png" alt="モプガジェ" class="logo-img" /></a>
+      </div>
+
+      <!-- メインコンテンツ -->
+      <div class="content">
+        <div class="hero">
+          <h1>ガジェットレビュー</h1>
+          <p>厳選したガジェットを正直にレビュー。あなたの次の一台を見つけよう。</p>
+        </div>
+
+        <!-- タブ（JS不要・全カテゴリのページをアンカーで切り替え） -->
+        <div class="tabs">
+          {CATEGORIES.map(cat => (
+            <button
+              class={`tab js-tab`}
+              data-cat={cat}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div class="product-count" id="count">{products.length}件の商品</div>
+
+        <div class="product-grid" id="grid">
+          {products.map(p => (
+            <a
+              class="product-card"
+              href={`/products/${p.id}/`}
+              data-cat={getCategory(p)}
+            >
+              {p.thumbnail
+                ? <img class="card-img" src={p.thumbnail} alt={p.name} loading="lazy" />
+                : <div class="card-img-placeholder">📦</div>
+              }
+              <div class="card-body">
+                <div class="card-name">{p.name}</div>
+                <div class="stars">
+                  <Fragment set:html={renderStars(p.rating)} />
+                  <span class="rating-num">{Number(p.rating).toFixed(1)}</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<script>
+  // カテゴリフィルター（軽量JS、SEOには影響なし）
+  const tabs = document.querySelectorAll('.js-tab');
+  const cards = document.querySelectorAll('.product-card');
+  const count = document.getElementById('count');
+
+  let current = 'すべて';
+
+  function update() {
+    let visible = 0;
+    cards.forEach(card => {
+      const match = current === 'すべて' || card.dataset.cat === current;
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    count.textContent = `${visible}件の商品`;
+    tabs.forEach(t => t.classList.toggle('active', t.dataset.cat === current));
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      current = tab.dataset.cat;
+      update();
+    });
+  });
+
+  // 初期状態
+  tabs[0].classList.add('active');
+</script>
+
+<style>
+  .page-grid {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 32px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+  @media (max-width: 700px) {
+    .page-grid { grid-template-columns: 1fr; }
+    .sidebar { display: flex; justify-content: center; padding-top: 1rem; }
+  }
+
+  .logo-img { width: 200px; object-fit: contain; padding-top: 8px; }
+
+  .hero { margin-bottom: 2.5rem; }
+  .hero h1 { font-size: 26px; font-weight: 500; letter-spacing: -0.4px; margin-bottom: 5px; }
+  .hero p { font-size: 14px; color: var(--muted); }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    padding: 8px 16px;
+    border: none;
+    background: none;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--text); font-weight: 500; border-bottom-color: var(--text); }
+
+  .product-count { font-size: 13px; color: var(--muted); margin-bottom: 1.2rem; }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  .product-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s, transform 0.15s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .product-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: contain;
+    background: #fafaf8;
+    padding: 1rem;
+    display: block;
+  }
+  .card-img-placeholder {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #fafaf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+  }
+  .card-body { padding: 1rem; }
+  .card-name { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 8px; }
+  .stars { display: flex; align-items: center; gap: 4px; }
+  .star { font-size: 13px; color: #f5a623; }
+  .star.empty { color: #ddd; }
+  .rating-num { font-size: 12px; color: var(--muted); }
+</style>

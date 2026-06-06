@@ -1,0 +1,62 @@
+---
+const {
+  title = 'モプガジェ',
+  description = '厳選したガジェットを正直にレビュー。あなたの次の一台を見つけよう。',
+  ogImage = '/og-default.png',
+  canonicalUrl,
+} = Astro.props;
+
+const siteUrl = import.meta.env.SITE_URL ?? 'https://mopugaje.netlify.app';
+const canonical = canonicalUrl ?? siteUrl + Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <!-- OGP -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content="ja_JP" />
+  <meta property="og:site_name" content="モプガジェ" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f5f4f1;
+      --surface: #ffffff;
+      --border: rgba(0,0,0,0.09);
+      --border-hover: rgba(0,0,0,0.22);
+      --text: #111110;
+      --muted: #888780;
+      --radius: 12px;
+    }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <slot />
+</body>
+</html>

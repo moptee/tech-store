@@ -1,0 +1,237 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getAllProducts, getProduct } from '../../lib/microcms.js';
+
+// SSG: ビルド時に全商品ページを生成
+export async function getStaticPaths() {
+  try {
+    const products = await getAllProducts();
+    if (!products || products.length === 0) return [];
+    return products.map(p => ({ params: { id: p.id } }));
+  } catch (e) {
+    return [];
+  }
+}
+
+const { id } = Astro.params;
+const p = await getProduct(id);
+const cat = Array.isArray(p.category) ? p.category[0] : p.category;
+
+function renderStars(rating) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    html += rating >= i
+      ? '<span class="star">★</span>'
+      : '<span class="star empty">★</span>';
+  }
+  return html;
+}
+
+const siteUrl = import.meta.env.SITE_URL ?? 'https://mopugaje.netlify.app';
+const pageUrl = `${siteUrl}/products/${p.id}/`;
+
+// 構造化データ（JSON-LD）
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.name,
+  description: p.specs ?? undefined,
+  image: p.thumbnail ?? undefined,
+  url: pageUrl,
+  ...(p.price && {
+    offers: {
+      '@type': 'Offer',
+      price: p.price,
+      priceCurrency: 'JPY',
+      availability: 'https://schema.org/InStock',
+      url: p.url ?? undefined,
+    },
+  }),
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: p.rating,
+    bestRating: 5,
+    worstRating: 1,
+    reviewCount: 1,
+  },
+};
+
+const description = p.specs
+  ? p.specs.slice(0, 120).replace(/<[^>]*>/g, '')
+  : `${p.name}のレビュー。評価 ${Number(p.rating).toFixed(1)} / 5.0。`;
+---
+
+<BaseLayout
+  title={`${p.name} | モプガジェ`}
+  description={description}
+  ogImage={p.thumbnail ?? '/og-default.png'}
+  canonicalUrl={pageUrl}
+>
+  <!-- 構造化データ -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <header>
+    <a href="/"><img src="/logo.png" alt="モプガジェ" class="header-logo" /></a>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="/">一覧</a>
+      <span>›</span>
+      <span>{cat}</span>
+      <span>›</span>
+      <span>{p.name}</span>
+    </div>
+
+    <div class="layout">
+      <div class="img-wrap">
+        {p.thumbnail
+          ? <img src={p.thumbnail} alt={p.name} />
+          : <div class="img-placeholder">📦</div>
+        }
+      </div>
+
+      <div class="info">
+        <div class="category-tag">{cat}</div>
+        <h1 class="product-name">{p.name}</h1>
+        <div class="stars">
+          <Fragment set:html={renderStars(p.rating)} />
+          <span class="rating-num">{Number(p.rating).toFixed(1)} / 5.0</span>
+        </div>
+        {p.price && (
+          <div class="price">¥{Number(p.price).toLocaleString()}</div>
+        )}
+        <div class="divider" />
+        {p.specs && (
+          <div class="specs">{p.specs}</div>
+        )}
+        {p.url && (
+          <a class="amazon-btn" href={p.url} target="_blank" rel="noopener noreferrer">
+            ↗ Amazonで見る
+          </a>
+        )}
+      </div>
+    </div>
+
+    {p.review && (
+      <div class="review-section">
+        <div class="section-title">レビュー</div>
+        <div class="review-body">
+          <Fragment set:html={p.review} />
+        </div>
+      </div>
+    )}
+  </main>
+</BaseLayout>
+
+<style>
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-logo { height: 48px; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .breadcrumb a { color: var(--muted); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--text); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 600px) { .layout { grid-template-columns: 1fr; } }
+
+  .img-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    overflow: hidden;
+  }
+  .img-wrap img { width: 100%; height: 100%; object-fit: contain; }
+  .img-placeholder { font-size: 60px; }
+
+  .info { display: flex; flex-direction: column; gap: 14px; }
+  .category-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: fit-content;
+  }
+  .product-name { font-size: 22px; font-weight: 500; letter-spacing: -0.3px; line-height: 1.3; }
+
+  .stars { display: flex; align-items: center; gap: 5px; }
+  .star { font-size: 18px; color: #f5a623; }
+  .star.empty { color: #ddd; }
+  .rating-num { font-size: 14px; color: var(--muted); }
+
+  .price { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; }
+  .divider { height: 1px; background: var(--border); }
+  .specs {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.9;
+    background: var(--bg);
+    padding: 12px 14px;
+    border-radius: 8px;
+  }
+  .amazon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--text);
+    color: var(--surface);
+    border-radius: var(--radius);
+    padding: 13px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.15s;
+    width: fit-content;
+  }
+  .amazon-btn:hover { opacity: 0.82; }
+
+  .review-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+  }
+  .section-title { font-size: 15px; font-weight: 500; margin-bottom: 1.25rem; }
+  .review-body { font-size: 14px; line-height: 1.9; }
+  .review-body :global(img) { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
+  .review-body :global(h1),
+  .review-body :global(h2),
+  .review-body :global(h3) { font-weight: 500; margin: 1.5rem 0 0.5rem; }
+  .review-body :global(p) { margin-bottom: 1rem; }
+  .review-body :global(ul),
+  .review-body :global(ol) { padding-left: 1.5rem; margin-bottom: 1rem; }
+  .review-body :global(li) { margin-bottom: 4px; }
+  .review-body :global(a) { color: var(--text); }
+</style>

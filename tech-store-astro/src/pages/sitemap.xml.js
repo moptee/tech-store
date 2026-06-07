@@ -1,4 +1,4 @@
-import { getAllProducts } from '../../lib/microcms.js';
+import { getAllProducts } from '../lib/microcms.js';
 
 export async function GET() {
   const products = await getAllProducts();

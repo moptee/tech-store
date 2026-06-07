@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getAllProducts } from '../lib/microcms.js';
 
 const products = await getAllProducts();
+
 const CATEGORIES = ['すべて', 'マウス', 'キーボード', 'オーディオ', 'モニター', 'その他'];
 
 function renderStars(rating) {

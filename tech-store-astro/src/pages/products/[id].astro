@@ -64,7 +64,7 @@ const description = p.specs
 <BaseLayout
   title={`${p.name} | モプガジェ`}
   description={description}
-  ogImage={p.thumbnail ?? '/og-default.png'}
+  ogImage={p.thumbnail?.url ?? '/og-default.png'}
   canonicalUrl={pageUrl}
 >
   <!-- 構造化データ -->

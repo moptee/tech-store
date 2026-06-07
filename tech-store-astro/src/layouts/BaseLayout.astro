@@ -23,7 +23,7 @@ const canonical = canonicalUrl ?? siteUrl + Astro.url.pathname;
   <meta property="og:type" content="website" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />
+  <meta property="og:image" content={typeof ogImage === 'string' && ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />
   <meta property="og:url" content={canonical} />
   <meta property="og:locale" content="ja_JP" />
   <meta property="og:site_name" content="モプガジェ" />
@@ -32,7 +32,7 @@ const canonical = canonicalUrl ?? siteUrl + Astro.url.pathname;
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />
+  <meta name="twitter:image" content={typeof ogImage === 'string' && ogImage.startsWith('http') ? ogImage : siteUrl + ogImage} />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&display=swap" rel="stylesheet" />

@@ -56,10 +56,10 @@ function getCategory(p) {
               href={`/products/${p.id}/`}
               data-cat={getCategory(p)}
             >
-              {p.thumbnail
-                ? <img class="card-img" src={p.thumbnail} alt={p.name} loading="lazy" />
-                : <div class="card-img-placeholder">📦</div>
-              }
+            {p.thumbnail && p.thumbnail.length > 0
+  ? <img class="card-img" src={p.thumbnail[0].url} alt={p.name} loading="lazy" />
+  : <div class="card-img-placeholder">📦</div>
+}
               <div class="card-body">
                 <div class="card-name">{p.name}</div>
                 <div class="stars">

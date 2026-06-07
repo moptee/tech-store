@@ -83,14 +83,13 @@ const description = p.specs
       <span>{p.name}</span>
     </div>
 
-    <div class="layout">
-      <div class="img-wrap">
-        {p.thumbnail
-          ? <img src={p.thumbnail} alt={p.name} />
-          : <div class="img-placeholder">📦</div>
-        }
-      </div>
-
+ <div class="layout">
+  <div class="img-wrap">
+    {p.thumbnail && p.thumbnail.length > 0
+      ? <img src={p.thumbnail[0].url} alt={p.name} />
+      : <div class="img-placeholder">📦</div>
+    }
+  </div>
       <div class="info">
         <div class="category-tag">{cat}</div>
         <h1 class="product-name">{p.name}</h1>
@@ -99,8 +98,8 @@ const description = p.specs
           <span class="rating-num">{Number(p.rating).toFixed(1)} / 5.0</span>
         </div>
         {p.price && (
-          <div class="price">¥{Number(p.price).toLocaleString()}</div>
-        )}
+  <div class="price">¥{p.price}</div>
+)}
         <div class="divider" />
         {p.specs && (
           <div class="specs">{p.specs}</div>
@@ -137,7 +136,7 @@ const description = p.specs
   }
   .header-logo { height: 48px; }
 
-  main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+main { max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem; }
 
   .breadcrumb {
     font-size: 12px;
@@ -224,8 +223,8 @@ const description = p.specs
     padding: 1.75rem;
   }
   .section-title { font-size: 15px; font-weight: 500; margin-bottom: 1.25rem; }
-  .review-body { font-size: 14px; line-height: 1.9; }
-  .review-body :global(img) { max-width: 100%; border-radius: 8px; margin: 1rem 0; }
+  .review-body { font-size: 16px; line-height: 1.9; }
+ .review-body :global(img) { max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0; object-fit: contain; }
   .review-body :global(h1),
   .review-body :global(h2),
   .review-body :global(h3) { font-weight: 500; margin: 1.5rem 0 0.5rem; }

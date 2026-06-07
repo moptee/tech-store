@@ -3,6 +3,8 @@ import { getAllProducts } from '../lib/microcms.js';
 
 const products = await getAllProducts();
 const siteUrl = 'https://mopgadge1.com';
+
+Astro.response.headers.set('Content-Type', 'application/xml');
 ---
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

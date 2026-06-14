@@ -48,18 +48,24 @@ const canonical = canonicalUrl ?? siteUrl + Astro.url.pathname;
       --muted: #888780;
       --radius: 12px;
     }
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+   body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 80px; /* 固定フッター分の余白 */
+}
 footer {
   display: flex;
   justify-content: center;
-  padding: 2rem 0;
+  padding: 0.75rem 0;
   border-top: 1px solid rgba(0,0,0,0.09);
-  margin-top: 2rem;
+  background: #ffffff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
 }
   </style>
 </head>

@@ -20,9 +20,13 @@ const cat = Array.isArray(p.category) ? p.category[0] : p.category;
 function renderStars(rating) {
   let html = '';
   for (let i = 1; i <= 5; i++) {
-    html += rating >= i
-      ? '<span class="star">★</span>'
-      : '<span class="star empty">★</span>';
+    if (rating >= i) {
+      html += `<svg class="star" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="#f5a623"/></svg>`;
+    } else if (rating >= i - 0.5) {
+      html += `<svg class="star" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="half${i}"><stop offset="50%" stop-color="#f5a623"/><stop offset="50%" stop-color="#ddd"/></linearGradient></defs><polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="url(#half${i})"/></svg>`;
+    } else {
+      html += `<svg class="star" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><polygon points="10,1 12.9,7 19.5,7.6 14.5,12 16.2,18.5 10,15 3.8,18.5 5.5,12 0.5,7.6 7.1,7" fill="#ddd"/></svg>`;
+    }
   }
   return html;
 }
@@ -184,9 +188,8 @@ main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
   }
   .product-name { font-size: 22px; font-weight: 500; letter-spacing: -0.3px; line-height: 1.3; }
 
-  .stars { display: flex; align-items: center; gap: 5px; }
-  .star { font-size: 18px; color: #f5a623; }
-  .star.empty { color: #ddd; }
+  .stars { display: flex; align-items: center; gap: 3px; }
+.star { width: 20px; height: 20px; display: inline-block; flex-shrink: 0; }
   .rating-num { font-size: 14px; color: var(--muted); }
 
   .price { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 500; }

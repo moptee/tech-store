@@ -38,6 +38,23 @@ const canonical = canonicalUrl ?? siteUrl + Astro.url.pathname;
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
+  .ad-wrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+.pr-label {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.6);
+  color: #fff;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  line-height: 1.4;
+  z-index: 10;
+}
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #f5f4f1;

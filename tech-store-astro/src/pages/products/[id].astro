@@ -74,11 +74,14 @@ const description = p.specs
   <!-- 構造化データ -->
   <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
 
- <header>
-  <a href="https://px.a8.net/svt/ejp?a8mat=4B5R03+3L731U+4NTO+5Z6WX" rel="nofollow">
-    <img border="0" width="468" height="60" alt="" src="https://www21.a8.net/svt/bgt?aid=260608755217&wid=001&eno=01&mid=s00000021750001004000&mc=1">
-  </a>
-  <img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=4B5R03+3L731U+4NTO+5Z6WX" alt="">
+<header>
+  <div class="ad-wrapper">
+    <span class="pr-label">PR</span>
+    <a href="https://px.a8.net/svt/ejp?a8mat=4B5R03+3L731U+4NTO+5Z6WX" rel="nofollow">
+      <img border="0" width="468" height="60" alt="" src="https://www21.a8.net/svt/bgt?aid=260608755217&wid=001&eno=01&mid=s00000021750001004000&mc=1">
+    </a>
+    <img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=4B5R03+3L731U+4NTO+5Z6WX" alt="">
+  </div>
 </header>
 
   <main>
@@ -131,6 +134,23 @@ const description = p.specs
 </BaseLayout>
 
 <style>
+.ad-wrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+.pr-label {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(255,255,255,0.85);
+  color: #888;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  line-height: 1.4;
+  z-index: 1;
+}
   header {
     background: var(--surface);
     border-bottom: 1px solid var(--border);

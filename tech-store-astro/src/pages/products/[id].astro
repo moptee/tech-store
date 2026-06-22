@@ -112,7 +112,7 @@ const description = p.specs
 )}
         <div class="divider" />
         {p.specs && (
-          <div class="specs">{p.specs}</div>
+          <div class="specs" set:html={p.specs.replace(/\n/g, '<br>')}></div>
         )}
         {p.url && (
           <a class="amazon-btn" href={p.url} target="_blank" rel="noopener noreferrer">

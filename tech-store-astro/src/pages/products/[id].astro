@@ -183,7 +183,9 @@ main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
     gap: 2rem;
     margin-bottom: 2rem;
   }
-  @media (max-width: 600px) { .layout { grid-template-columns: 1fr; } }
+ @media (max-width: 600px) {
+  main { padding: 1rem 0.5rem; }
+}
 
   .img-wrap {
     background: var(--surface);
@@ -243,13 +245,10 @@ main { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
   .amazon-btn:hover { opacity: 0.82; }
 
   .review-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.75rem;
+   margin-top: 2rem;
   }
   .section-title { font-size: 15px; font-weight: 500; margin-bottom: 1.25rem; }
- .review-body { font-size: 16px; line-height: 1.9; font-family: 'Noto Sans JP', sans-serif; font-weight: 400; }
+ .review-body { font-size: 16px; line-height: 1.6; font-family: 'Noto Sans JP', sans-serif; font-weight: 400; }
  .review-body :global(img) { max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0; }
 .review-body :global(img[width]) { width: attr(width px); }
 .review-body :global(audio) {
